@@ -1,16 +1,7 @@
-﻿using MySql.Data.MySqlClient;
+using MySql.Data.MySqlClient;
 using System;
-using System.Reflection.PortableExecutable;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace GepjarmuvekGUI
 {
@@ -19,7 +10,6 @@ namespace GepjarmuvekGUI
         public string ConnectionString = "server=localhost;uid=root;database=gepjarmuvek2";
         public MySqlConnection connection;
         public MySqlCommand command;
-        public int currentUserId;
 
         public MainWindow()
         {
@@ -28,52 +18,79 @@ namespace GepjarmuvekGUI
             LoadList();
         }
 
-        private void HirdetesekBetoltese_Click(object sender, RoutedEventArgs e)
-        {
-            connection.Open();
-            command = connection.CreateCommand();
-            command.CommandText = $"SELECT COUNT(*) as szama FROM jarmu WHERE elado = {Azonosito.Text}";
-            MySqlDataReader reader = command.ExecuteReader();
-            while (reader.Read())
-            {
-                HiretesekSzama.Content = reader.GetInt32("szama");
-            }
-            connection.Close();
-        }
-
         private void LoadList()
         {
+            Hirdetok.Items.Clear();
             connection.Open();
             command = connection.CreateCommand();
             command.CommandText = "SELECT id, nev FROM elado";
             MySqlDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                ListBoxItem item = new ListBoxItem();
-                item.Content = reader.GetString("nev");
-                item.Tag = reader.GetInt32("id");
+                ListBoxItem item = new ListBoxItem
+                {
+                    Content = reader.GetString("nev"),
+                    Tag = reader.GetInt32("id")
+                };
                 Hirdetok.Items.Add(item);
             }
             connection.Close();
         }
 
-        private void Hirdetok_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void InsertElado(string nev, string telefon)
         {
-            if (Hirdetok.SelectedItem is ListBoxItem selectedItem)
+            try
             {
-                int userId = (int)selectedItem.Tag;
-                Azonosito.Text = userId.ToString();
-                Tulajdonos.Text = selectedItem.Content.ToString();
                 connection.Open();
                 command = connection.CreateCommand();
-                command.CommandText = $"SELECT telefon FROM elado WHERE id = {userId}";
-                MySqlDataReader reader = command.ExecuteReader();
-                while (reader.Read())
-                {
-                    Telefonszam.Text = reader.GetString("telefon");
-                }
+                command.CommandText = "INSERT INTO elado (nev, telefon) VALUES (@nev, @telefon)";
+                command.Parameters.AddWithValue("@nev", nev);
+                command.Parameters.AddWithValue("@telefon", telefon);
+                command.ExecuteNonQuery();
                 connection.Close();
+                LoadList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Hiba történt: " + ex.Message);
+            }
+        }
 
+        private void UpdateElado(int id, string nev, string telefon)
+        {
+            try
+            {
+                connection.Open();
+                command = connection.CreateCommand();
+                command.CommandText = "UPDATE elado SET nev = @nev, telefon = @telefon WHERE id = @id";
+                command.Parameters.AddWithValue("@id", id);
+                command.Parameters.AddWithValue("@nev", nev);
+                command.Parameters.AddWithValue("@telefon", telefon);
+                command.ExecuteNonQuery();
+                connection.Close();
+                LoadList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Hiba történt: " + ex.Message);
+            }
+        }
+
+        private void DeleteElado(int id)
+        {
+            try
+            {
+                connection.Open();
+                command = connection.CreateCommand();
+                command.CommandText = "DELETE FROM elado WHERE id = @id";
+                command.Parameters.AddWithValue("@id", id);
+                command.ExecuteNonQuery();
+                connection.Close();
+                LoadList();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Hiba történt: " + ex.Message);
             }
         }
     }
