@@ -1,0 +1,42 @@
+﻿<Window x:Class="Telok.newPhone"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:Telok"
+      mc:Ignorable="d" 
+      d:DesignHeight="450" d:DesignWidth="800"
+      Title="newPhone" Closing="Window_Closing">
+
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+            <RowDefinition Height="auto"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <TextBlock Text="Márka:"></TextBlock>
+        <TextBox x:Name="txtMarka" Grid.Row="0" Margin="100,0,0,5"></TextBox>
+        
+        <TextBlock Text="Modell:" Grid.Row="1"></TextBlock>
+        <TextBox x:Name="txtModell" Grid.Row="1" Margin="100,0,0,5"></TextBox>
+
+        <TextBlock Text="Gyártási Év:" Grid.Row="2"></TextBlock>
+        <TextBox x:Name="txtGyEv" Grid.Row="2" Margin="100,0,0,5"></TextBox>
+
+        <TextBlock Text="Szin:" Grid.Row="3"></TextBlock>
+        <TextBox x:Name="txtSzin" Grid.Row="3" Margin="100,0,0,5"></TextBox>
+
+        <TextBlock Text="Eladott Darab:" Grid.Row="4"></TextBlock>
+        <TextBox x:Name="txtEladott" Grid.Row="4" Margin="100,0,0,5"></TextBox>
+        
+        <TextBlock Text="Átlag Ár:" Grid.Row="5"></TextBlock>
+        <TextBox x:Name="txtAtlagAr" Grid.Row="5" Margin="100,0,0,5"></TextBox>
+
+        <Button Content="Hozzáadás" Grid.Row="6" Margin="0,10,0,0" Click="Button_Click"></Button>
+    </Grid>
+</Window>
